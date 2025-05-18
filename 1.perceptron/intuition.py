@@ -59,7 +59,7 @@ def main(logic_type="AND"):
     print(f"Training on {logic_type} dataset...\n")
     X, y = get_dataset(logic_type)
 
-    model = Perceptron(shape=(2,))
+    model = Perceptron(shape=(2,), learning_rate=0.001, activation='sigmoid')
     snapshots = []
     PLOT_INTERVAL = 100
     EPOCHS = 10000
