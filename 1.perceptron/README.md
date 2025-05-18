@@ -14,7 +14,7 @@ This implementation uses:
 - **Sigmoid activation function:**  
   \[
   \hat{y} = \frac{1}{1 + e^{-z}}
-  \]
+  \]  
   which outputs probabilities instead of hard binary values.
 
 - **Cross-entropy loss:**  
@@ -28,7 +28,7 @@ This implementation uses:
 ## How It Works
 
 1. **Input:**  
-   A vector \( x = [x_1, x_2, ..., x_n] \), for example for the AND gate:  
+   A vector \( x = [x_1, x_2, \ldots, x_n] \), for example for the AND gate:  
    \[
    [0, 0], [0, 1], [1, 0], [1, 1]
    \]
@@ -82,5 +82,3 @@ The goal is to learn to output 1 only when both inputs are 1.
 
 - Rosenblatt, F. (1958). *The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.*  
 - Nielsen, M. (Online Book). *Neural Networks and Deep Learning.*  
-
----
