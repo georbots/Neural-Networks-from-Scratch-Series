@@ -14,9 +14,11 @@ class Perceptron:
         return y_hat
 
     def train(self, X, y, num_epochs):
+        loss_history = []
+        acc_history = []
         for i in range(num_epochs):
             epoch_loss = 0
-            for x, y_true in zip(X,y):
+            for x, y_true in zip(X, y):
                 y_hat = self.predict(x)
                 loss = -(y_true * np.log(y_hat) + (1-y_true)*np.log(1-y_hat)) # implement cross entropy loss fix later
                 epoch_loss += loss
@@ -35,7 +37,10 @@ class Perceptron:
 
             accuracy = num_correct/len(X)
 
-            print(f'Epoch {i} train accuracy: {accuracy}')
-            print(f'Epoch {i} train loss: {epoch_loss/len(X)}')
+            loss_history.append(epoch_loss / len(X))
+            acc_history.append(accuracy)
 
-        pass  # code for training loop
+            print(f'Epoch {i} train accuracy: {accuracy}')
+            print(f'Epoch {i} train loss: {epoch_loss / len(X)}')
+
+        return loss_history, acc_history
