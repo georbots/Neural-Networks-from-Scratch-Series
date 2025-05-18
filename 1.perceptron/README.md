@@ -29,7 +29,7 @@ $$
 \hat{y} = \frac{1}{1 + e^{-z}}
 $$
 
-where $\hat{y}$ is the predicted output (a probability between 0 and 1).
+where $\hat{y}$ is the predicted output (a probability between 0 and 1). ReLU and Step function are also implemented.
 
 ## Training the Perceptron on Logic Gates
 
