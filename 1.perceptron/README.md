@@ -31,11 +31,21 @@ $$
 
 where $\hat{y}$ is the predicted output (a probability between 0 and 1).
 
-## Training the Perceptron on the AND Problem
+## Training the Perceptron on Logic Gates
 
-This implementation trains the perceptron to perform the AND logic gate function. The input consists of pairs of binary values, and the output is 1 only if both inputs are 1; otherwise, the output is 0.
+This implementation trains the perceptron to perform binary logic gate functions such as AND, OR, NAND, and NOR.
 
-Training is done with the following process:
+### Decision Boundary Evolution GIFs
+
+As the model trains, the decision boundary evolves — shown below for each gate:
+
+| AND                                                | OR                                                 | NAND                                               | NOR                                                |
+|---------------------------------------------------|----------------------------------------------------|----------------------------------------------------|----------------------------------------------------|
+| ![](decision_boundary_gifs/and_boundary.gif)      | ![](decision_boundary_gifs/or_boundary.gif)        | ![](decision_boundary_gifs/nand_boundary.gif)      | ![](decision_boundary_gifs/nor_boundary.gif)       |
+
+*Note: The black line shows the decision boundary where the perceptron output is 0.5.*
+
+### Training Process Summary
 
 1. Initialize weights and bias to small random values.  
 2. For a set number of epochs, iterate over each training example:  
@@ -44,12 +54,24 @@ Training is done with the following process:
    - Update the weights and bias by moving against the gradient scaled by the learning rate.  
 3. After each epoch, calculate and print the average loss and accuracy over the entire training set.
 
-## Summary
+The model predicts continuous values (between 0 and 1) using sigmoid activation, and classifies inputs by thresholding predictions at 0.5.
 
-- The model predicts continuous values (between 0 and 1) using sigmoid activation.  
-- Binary classification is done by thresholding predictions at 0.5.  
-- Training minimizes the cross-entropy loss via gradient descent on each sample.  
-- Accuracy is measured as the fraction of correctly classified samples per epoch.  
+## XOR Problem: A Perceptron Limitation
+
+The XOR function is **not linearly separable**, meaning that no single line can perfectly separate the positive and negative classes. Therefore, a single-layer perceptron **cannot** learn XOR.
+
+Here is the evolution of the decision boundary when training a perceptron on XOR:
+
+![](decision_boundary_gifs/xor_boundary.gif)
+
+You can see the perceptron struggles to form a proper decision boundary, failing to classify XOR inputs correctly.
+
+### Why?
+
+- The XOR problem requires a **non-linear decision boundary**, which a single-layer perceptron cannot model.
+- To solve XOR, you need a **multi-layer neural network** (at least one hidden layer) that can learn non-linear representations.
+
+---
 
 ## References
 
