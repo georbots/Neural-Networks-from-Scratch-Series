@@ -51,7 +51,6 @@ def create_decision_boundary_gif_in_memory(X, y, snapshots, output_path, interva
         image = imageio.imread(buf)
         images.append(image)
 
-    # <-- Here is the key addition: loop=0 to repeat infinitely
     imageio.mimsave(output_path, images, duration=interval, loop=0)
     print(f"Decision boundary GIF saved as {output_path}")
 
