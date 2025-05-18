@@ -11,10 +11,12 @@ It takes an input vector, computes a weighted sum plus bias, applies an activati
 
 This implementation uses:
 
-- **Sigmoid activation function:**  
+- **Sigmoid activation function:**
+  $$
   \[
   \hat{y} = \frac{1}{1 + e^{-z}}
-  \]  
+  \]
+  $$
   which outputs probabilities instead of hard binary values.
 
 - **Cross-entropy loss:**  
