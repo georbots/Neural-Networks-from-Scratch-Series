@@ -1,86 +1,57 @@
-# Perceptron from Scratch — AND Gate Example
+# Perceptron from Scratch
 
 ## What is a Perceptron?
 
-A Perceptron is the simplest type of artificial neuron used for binary classification.  
-It takes an input vector, computes a weighted sum plus bias, applies an activation function, and outputs a prediction between 0 and 1.
+A Perceptron is the simplest type of artificial neuron and a fundamental unit in neural networks. It models a binary classifier that decides whether an input belongs to one class or another.
 
----
+## Mathematical Definition
 
-## Implementation Details
+Given an input vector:
 
-This implementation uses:
+$$
+\mathbf{x} = [x_1, x_2, ..., x_n]
+$$
 
-- **Sigmoid activation function:**
-  $$
-  \[
-  \hat{y} = \frac{1}{1 + e^{-z}}
-  \]
-  $$
-  which outputs probabilities instead of hard binary values.
+The perceptron computes a weighted sum of the inputs plus a bias term:
 
-- **Cross-entropy loss:**  
-  Used to measure how well the predictions match the true labels.
+$$
+z = w_1 x_1 + w_2 x_2 + ... + w_n x_n + b
+$$
 
-- **Gradient descent:**  
-  To update weights and bias by computing gradients of the loss.
+where:
 
----
+- $\mathbf{w} = [w_1, w_2, ..., w_n]$ are the weights  
+- $b$ is the bias scalar  
 
-## How It Works
+The perceptron applies a sigmoid activation function to the weighted sum:
 
-1. **Input:**  
-   A vector \( x = [x_1, x_2, \ldots, x_n] \), for example for the AND gate:  
-   \[
-   [0, 0], [0, 1], [1, 0], [1, 1]
-   \]
+$$
+\hat{y} = \frac{1}{1 + e^{-z}}
+$$
 
-2. **Weighted sum:**  
-   \[
-   z = \mathbf{w} \cdot \mathbf{x} + b
-   \]
+where $\hat{y}$ is the predicted output (a probability between 0 and 1).
 
-3. **Prediction:**  
-   Sigmoid applied to \( z \) produces \( \hat{y} \in (0, 1) \).
+## Training the Perceptron on the AND Problem
 
-4. **Loss calculation:**  
-   Cross-entropy loss compares \( \hat{y} \) with true label \( y \).
+This implementation trains the perceptron to perform the AND logic gate function. The input consists of pairs of binary values, and the output is 1 only if both inputs are 1; otherwise, the output is 0.
 
-5. **Gradient computation:**  
-   Calculate derivatives of loss with respect to weights and bias.
+Training is done with the following process:
 
-6. **Update:**  
-   Adjust weights and bias to minimize the loss.
+1. Initialize weights and bias to small random values.  
+2. For a set number of epochs, iterate over each training example:  
+   - Compute the prediction $\hat{y}$ using the sigmoid function.  
+   - Calculate the gradient of the loss with respect to weights and bias using the difference $(\hat{y} - y)$.  
+   - Update the weights and bias by moving against the gradient scaled by the learning rate.  
+3. After each epoch, calculate and print the average loss and accuracy over the entire training set.
 
-7. **Repeat:**  
-   Iterate over the training data for multiple epochs.
+## Summary
 
----
-
-## Training on the AND Gate
-
-The perceptron is trained on the 4 input-output pairs of the logical AND function:
-
-| Input  | Output |
-|--------|--------|
-| [0, 0] | 0      |
-| [0, 1] | 0      |
-| [1, 0] | 0      |
-| [1, 1] | 1      |
-
-The goal is to learn to output 1 only when both inputs are 1.
-
----
-
-## Usage
-
-- The `Perceptron` class has `predict` and `train` methods.  
-- The `train` method prints accuracy and loss after each epoch.  
-- The number of epochs and learning rate can be adjusted.
-
----
+- The model predicts continuous values (between 0 and 1) using sigmoid activation.  
+- Binary classification is done by thresholding predictions at 0.5.  
+- Training minimizes the cross-entropy loss via gradient descent on each sample.  
+- Accuracy is measured as the fraction of correctly classified samples per epoch.  
 
 ## References
 
-- Rosenblatt, F. (1958). *The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.*  
-- Nielsen, M. (Online Book). *Neural Networks and Deep Learning.*  
+- The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain, Rosenblatt (1958)  
+- Neural Networks and Deep Learning, Michael Nielsen (Online Book)
