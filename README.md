@@ -4,7 +4,7 @@
 
 ### 1. [Perceptron](./1.perceptron) (Binary Classification) 
 - Perceptron with sigmoid, ReLU, step activation using numpy
-- Training on AND, OR, XOR logic gate
+- Training on AND, OR, NAND, NOR, XOR logic gate
 - Loss and accuracy per epoch
 - Gif visualization of decision boundary
 
