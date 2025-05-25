@@ -15,7 +15,7 @@ Mini-batch training updates model parameters after processing small subsets (bat
 
 ### Key steps:
 
-- Split data into mini-batches of size B.  
+- Split data into mini-batches of size \( B \).  
 - For each batch:  
   - Compute weighted sums and activations for all samples in the batch.  
   - Calculate the average loss over the batch.  
@@ -26,60 +26,97 @@ Mini-batch training updates model parameters after processing small subsets (bat
 
 ## Mathematical Formulation of Batch Training
 
-Let the dataset have N samples, each with d features:  
-X = [x_1, x_2, ..., x_N], where each x_i is a d-dimensional vector
+Let the dataset have \( N \) samples, each with \( d \) features:  
+\[
+\mathbf{X} = [\mathbf{x}_1, \mathbf{x}_2, ..., \mathbf{x}_N], \quad \mathbf{x}_i \in \mathbb{R}^d
+\]
 
 and corresponding labels:  
-y = [y_1, y_2, ..., y_N], where each y_i is 0 or 1
+\[
+\mathbf{y} = [y_1, y_2, ..., y_N], \quad y_i \in \{0, 1\}
+\]
 
 1. Partition dataset into mini-batches
 
-Split X and y into M batches of size B:
+Split \(\mathbf{X}\) and \(\mathbf{y}\) into \( M = \lceil \frac{N}{B} \rceil \) batches of size \( B \):
 
-X = [X^(1), X^(2), ..., X^(M)]  
-y = [y^(1), y^(2), ..., y^(M)]
+\[
+\mathbf{X} = [\mathbf{X}^{(1)}, \mathbf{X}^{(2)}, ..., \mathbf{X}^{(M)}]
+\]
 
-where each batch X^(m) has shape (B, d)
+\[
+\mathbf{y} = [\mathbf{y}^{(1)}, \mathbf{y}^{(2)}, ..., \mathbf{y}^{(M)}]
+\]
 
-2. Forward pass for mini-batch m
+where each batch \(\mathbf{X}^{(m)}\) has shape \((B, d)\).
 
-Calculate weighted sums for all samples in batch m:
+---
 
-z^(m) = X^(m) dot w + b
+2. Forward pass for mini-batch \( m \)
 
-where  
-- w is the weights vector of shape (d,)  
-- b is the bias scalar  
-- z^(m) is a vector of length B
+Compute the linear combination for all batch samples:
 
-3. Apply activation (sigmoid)
+\[
+\mathbf{z}^{(m)} = \mathbf{X}^{(m)} \mathbf{w} + b
+\]
 
-For each element of z^(m):
+where
 
-y_hat^(m) = 1 / (1 + exp(-z^(m)))
+- \(\mathbf{w} \in \mathbb{R}^d\) is the weight vector,  
+- \(b \in \mathbb{R}\) is the bias scalar,  
+- \(\mathbf{z}^{(m)} \in \mathbb{R}^B\) is the pre-activation output for batch \(m\).
 
-This gives predicted probabilities for batch m.
+---
 
-4. Compute average binary cross-entropy loss over batch
+3. Apply activation function (sigmoid)
 
-Loss^(m) = -(1/B) * sum_{i=1 to B} [ y_i^(m) * log(y_hat_i^(m)) + (1 - y_i^(m)) * log(1 - y_hat_i^(m)) ]
+\[
+\hat{\mathbf{y}}^{(m)} = \sigma(\mathbf{z}^{(m)}) = \frac{1}{1 + e^{-\mathbf{z}^{(m)}}}
+\]
 
-5. Compute gradients (average over batch)
+\(\hat{\mathbf{y}}^{(m)} \in \mathbb{R}^B\) contains predicted probabilities for the batch.
 
-Gradient w.r.t weights:
+---
 
-grad_w^(m) = (1/B) * X^(m).T dot (y_hat^(m) - y^(m))
+4. Compute binary cross-entropy loss (average over batch)
 
-Gradient w.r.t bias:
+\[
+\mathcal{L}^{(m)} = - \frac{1}{B} \sum_{i=1}^B \left[ y_i^{(m)} \log \hat{y}_i^{(m)} + (1 - y_i^{(m)}) \log (1 - \hat{y}_i^{(m)}) \right]
+\]
 
-grad_b^(m) = (1/B) * sum_{i=1 to B} (y_hat_i^(m) - y_i^(m))
+---
 
-6. Update parameters with learning rate eta
+5. Calculate gradients (average over batch)
 
-w = w - eta * grad_w^(m)  
-b = b - eta * grad_b^(m)
+Weight gradient:
 
-Repeat steps 2-6 for all batches and epochs.
+\[
+\nabla_{\mathbf{w}}^{(m)} = \frac{1}{B} \mathbf{X}^{(m)^\top} \left( \hat{\mathbf{y}}^{(m)} - \mathbf{y}^{(m)} \right)
+\]
+
+Bias gradient:
+
+\[
+\nabla_{b}^{(m)} = \frac{1}{B} \sum_{i=1}^B \left( \hat{y}_i^{(m)} - y_i^{(m)} \right)
+\]
+
+---
+
+6. Update parameters
+
+With learning rate \(\eta\):
+
+\[
+\mathbf{w} \leftarrow \mathbf{w} - \eta \nabla_{\mathbf{w}}^{(m)}
+\]
+
+\[
+b \leftarrow b - \eta \nabla_{b}^{(m)}
+\]
+
+---
+
+Repeat steps 2-6 for each mini-batch \( m = 1, 2, ..., M \) and over all epochs until convergence.
 
 ---
 
