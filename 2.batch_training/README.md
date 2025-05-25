@@ -105,6 +105,16 @@ Generated 2D linearly separable data:
 
 ---
 
+## Decision Boundary Visualization with GIF
+
+During training, snapshots of the decision boundary are captured every 100 epochs and combined into an animated GIF. This GIF visually demonstrates how the perceptron's decision boundary evolves and converges as training progresses on the mini-batch data.
+
+The decision boundary is plotted by evaluating the sigmoid activation over a 2D grid and contouring the 0.5 probability level, showing class separation dynamically.
+
+**GIF location:** `decision_boundary.gif`
+
+---
+
 ## References
 
 - Goodfellow et al. (2016) *Deep Learning*  
