@@ -15,127 +15,98 @@ Mini-batch training updates model parameters after processing small subsets (bat
 
 ### Key steps:
 
-- Split data into mini-batches of size \( B \).  
-- For each batch:  
-  - Compute weighted sums and activations for all samples in the batch.  
-  - Calculate the average loss over the batch.  
-  - Compute gradients averaged across the batch.  
-  - Update weights and bias accordingly.
+1. Split data into mini-batches of size $B$  
+2. For each batch:  
+   - Compute weighted sums and activations for all samples  
+   - Calculate the average loss over the batch  
+   - Compute gradients averaged across the batch  
+   - Update weights and bias  
 
 ---
 
-## Mathematical Formulation of Batch Training
+## Mathematical Formulation
 
-Let the dataset have \( N \) samples, each with \( d \) features:  
-\[
-\mathbf{X} = [\mathbf{x}_1, \mathbf{x}_2, ..., \mathbf{x}_N], \quad \mathbf{x}_i \in \mathbb{R}^d
-\]
+### 1. Dataset Notation
 
-and corresponding labels:  
-\[
-\mathbf{y} = [y_1, y_2, ..., y_N], \quad y_i \in \{0, 1\}
-\]
+Let the dataset have $N$ samples, each with $d$ features:
 
-1. Partition dataset into mini-batches
+$$
+\mathbf{X} = \begin{bmatrix} \mathbf{x}_1^\top \\ \mathbf{x}_2^\top \\ \vdots \\ \mathbf{x}_N^\top \end{bmatrix} \in \mathbb{R}^{N \times d}, \quad 
+\mathbf{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_N \end{bmatrix} \in \{0,1\}^N
+$$
 
-Split \(\mathbf{X}\) and \(\mathbf{y}\) into \( M = \lceil \frac{N}{B} \rceil \) batches of size \( B \):
+### 2. Mini-Batch Partitioning
 
-\[
-\mathbf{X} = [\mathbf{X}^{(1)}, \mathbf{X}^{(2)}, ..., \mathbf{X}^{(M)}]
-\]
+Split into $M = \lceil N/B \rceil$ batches:
 
-\[
-\mathbf{y} = [\mathbf{y}^{(1)}, \mathbf{y}^{(2)}, ..., \mathbf{y}^{(M)}]
-\]
+$$
+\mathbf{X} = \begin{bmatrix} \mathbf{X}^{(1)} \\ \mathbf{X}^{(2)} \\ \vdots \\ \mathbf{X}^{(M)} \end{bmatrix}, \quad
+\mathbf{y} = \begin{bmatrix} \mathbf{y}^{(1)} \\ \mathbf{y}^{(2)} \\ \vdots \\ \mathbf{y}^{(M)} \end{bmatrix}
+$$
 
-where each batch \(\mathbf{X}^{(m)}\) has shape \((B, d)\).
+Each $\mathbf{X}^{(m)} \in \mathbb{R}^{B \times d}$, $\mathbf{y}^{(m)} \in \{0,1\}^B$
 
----
+### 3. Forward Pass (Batch $m$)
 
-2. Forward pass for mini-batch \( m \)
+Pre-activation:
 
-Compute the linear combination for all batch samples:
+$$
+\mathbf{z}^{(m)} = \mathbf{X}^{(m)} \mathbf{w} + b\mathbf{1}_B \in \mathbb{R}^B
+$$
 
-\[
-\mathbf{z}^{(m)} = \mathbf{X}^{(m)} \mathbf{w} + b
-\]
+Sigmoid activation:
 
-where
+$$
+\hat{\mathbf{y}}^{(m)} = \sigma(\mathbf{z}^{(m)}) = \frac{1}{1 + \exp(-\mathbf{z}^{(m)})}
+$$
 
-- \(\mathbf{w} \in \mathbb{R}^d\) is the weight vector,  
-- \(b \in \mathbb{R}\) is the bias scalar,  
-- \(\mathbf{z}^{(m)} \in \mathbb{R}^B\) is the pre-activation output for batch \(m\).
+### 4. Binary Cross-Entropy Loss
 
----
+Average loss over batch:
 
-3. Apply activation function (sigmoid)
+$$
+\mathcal{L}^{(m)} = -\frac{1}{B} \sum_{i=1}^B \left[ y_i^{(m)} \log(\hat{y}_i^{(m)}) + (1-y_i^{(m)}) \log(1-\hat{y}_i^{(m)}) \right]
+$$
 
-\[
-\hat{\mathbf{y}}^{(m)} = \sigma(\mathbf{z}^{(m)}) = \frac{1}{1 + e^{-\mathbf{z}^{(m)}}}
-\]
-
-\(\hat{\mathbf{y}}^{(m)} \in \mathbb{R}^B\) contains predicted probabilities for the batch.
-
----
-
-4. Compute binary cross-entropy loss (average over batch)
-
-\[
-\mathcal{L}^{(m)} = - \frac{1}{B} \sum_{i=1}^B \left[ y_i^{(m)} \log \hat{y}_i^{(m)} + (1 - y_i^{(m)}) \log (1 - \hat{y}_i^{(m)}) \right]
-\]
-
----
-
-5. Calculate gradients (average over batch)
+### 5. Gradient Computation
 
 Weight gradient:
 
-\[
-\nabla_{\mathbf{w}}^{(m)} = \frac{1}{B} \mathbf{X}^{(m)^\top} \left( \hat{\mathbf{y}}^{(m)} - \mathbf{y}^{(m)} \right)
-\]
+$$
+\nabla_{\mathbf{w}}^{(m)} = \frac{1}{B} (\mathbf{X}^{(m)})^\top (\hat{\mathbf{y}}^{(m)} - \mathbf{y}^{(m)}) \in \mathbb{R}^d
+$$
 
 Bias gradient:
 
-\[
-\nabla_{b}^{(m)} = \frac{1}{B} \sum_{i=1}^B \left( \hat{y}_i^{(m)} - y_i^{(m)} \right)
-\]
+$$
+\nabla_b^{(m)} = \frac{1}{B} \mathbf{1}_B^\top (\hat{\mathbf{y}}^{(m)} - \mathbf{y}^{(m)}) \in \mathbb{R}
+$$
 
----
+### 6. Parameter Update
 
-6. Update parameters
+With learning rate $\eta$:
 
-With learning rate \(\eta\):
-
-\[
+$$
 \mathbf{w} \leftarrow \mathbf{w} - \eta \nabla_{\mathbf{w}}^{(m)}
-\]
+$$
 
-\[
-b \leftarrow b - \eta \nabla_{b}^{(m)}
-\]
-
----
-
-Repeat steps 2-6 for each mini-batch \( m = 1, 2, ..., M \) and over all epochs until convergence.
+$$
+b \leftarrow b - \eta \nabla_b^{(m)}
+$$
 
 ---
 
-## Synthetic Dataset Description
+## Synthetic Dataset
 
-To test batch training, we generate a simple **linearly separable 2D dataset** with:
-
-- 300 samples (150 per class)  
-- Class 0: Gaussian centered at (1,1)  
-- Class 1: Gaussian centered at (4,4)  
-- Added Gaussian noise to make the task realistic  
-
-This dataset enables visualization of decision boundaries and training progress in 2D space.
+Generated 2D linearly separable data:
+- 300 samples (150 per class)
+- Class 0: $\mathcal{N}([1,1]^\top, 0.5\mathbf{I})$
+- Class 1: $\mathcal{N}([4,4]^\top, 0.5\mathbf{I})$
+- Visual decision boundaries possible
 
 ---
 
 ## References
 
-- Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep Learning*. MIT Press.  
-- Bishop, C. M. (2006). *Pattern Recognition and Machine Learning*. Springer.  
-
----
+- Goodfellow et al. (2016) *Deep Learning*  
+- Bishop (2006) *Pattern Recognition and Machine Learning*
