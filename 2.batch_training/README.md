@@ -111,7 +111,7 @@ During training, snapshots of the decision boundary are captured every 100 epoch
 
 The decision boundary is plotted by evaluating the sigmoid activation over a 2D grid and contouring the 0.5 probability level, showing class separation dynamically.
 
-**GIF location:** `decision_boundary.gif`
+![Decision Boundary Evolution](decision_boundary_gif/decision_boundary.gif)
 
 ---
 
