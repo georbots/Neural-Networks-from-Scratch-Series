@@ -6,14 +6,14 @@ This module builds upon the single-sample perceptron training approach ([Percept
 
 ---
 
-## Mini-Batch Gradient Descent Theory
+## Mini-Batch Gradient Descent
 
 Mini-batch training updates model parameters after processing small subsets (batches) of the training data instead of individual samples or the entire dataset. This approach balances:
 
 - **Efficiency** (faster than full batch)  
 - **Stability** (less noisy than pure stochastic updates)
 
-### Key steps:
+### Implementation Steps:
 
 1. Split data into mini-batches of size $B$  
 2. For each batch:  
