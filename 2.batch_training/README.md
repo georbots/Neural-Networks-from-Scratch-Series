@@ -102,7 +102,6 @@ Generated 2D linearly separable data:
 - 300 samples (150 per class)
 - Class 0: $\mathcal{N}([1,1]^\top, 0.5\mathbf{I})$
 - Class 1: $\mathcal{N}([4,4]^\top, 0.5\mathbf{I})$
-- Visual decision boundaries possible
 
 ---
 
